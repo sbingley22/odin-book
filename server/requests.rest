@@ -1,0 +1,72 @@
+@authToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzA3MjMxNzI4fQ.gvel7HMGycD9ZCl08WuohHqlAnvPxR9dPgfV743H7iU
+
+###
+
+GET http://localhost:3000/users/
+Authorization: {{authToken}}
+
+###
+
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "password1"
+}
+
+###
+
+POST http://localhost:3000/users/sign-up
+Content-Type: application/json
+
+{
+  "username": "user4",
+  "password": "password4",
+  "confirmpassword": "password4",
+  "firstname": "Rachael",
+  "lastname": "Rest"
+}
+
+###
+// Get a specific thread the current user belongs to
+GET http://localhost:3000/users/profiles/65c356d17f1a75da54bd61bc
+Authorization: {{authToken}}
+
+###
+// Get a specific thread
+GET http://localhost:3000/users/threads/65c356d27f1a75da54bd61cb
+Authorization: {{authToken}}
+
+###
+// Get all profiles
+GET http://localhost:3000/users/profiles
+Authorization: {{authToken}}
+
+###
+// Get all threads belonging to user
+GET http://localhost:3000/users/threads
+Authorization: {{authToken}}
+
+###
+
+POST http://localhost:3000/users/threads
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "userids": ["65c356d17f1a75da54bd61c2", "65c356d17f1a75da54bd61c6"],
+  "title": "A Rest Test Thread"
+}
+
+###
+// Post a message
+POST http://localhost:3000/users/threads/65c356d27f1a75da54bd61cb/messages
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "msg": "Another Rest Message"
+}
+
+###
