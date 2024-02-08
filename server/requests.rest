@@ -29,21 +29,25 @@ Content-Type: application/json
 }
 
 ###
+
 // Get a specific thread the current user belongs to
 GET http://localhost:3000/users/profiles/65c356d17f1a75da54bd61bc
 Authorization: {{authToken}}
 
 ###
+
 // Get a specific thread
 GET http://localhost:3000/users/threads/65c356d27f1a75da54bd61cb
 Authorization: {{authToken}}
 
 ###
+
 // Get all profiles
 GET http://localhost:3000/users/profiles
 Authorization: {{authToken}}
 
 ###
+
 // Get all threads belonging to user
 GET http://localhost:3000/users/threads
 Authorization: {{authToken}}
@@ -60,6 +64,7 @@ Authorization: {{authToken}}
 }
 
 ###
+
 // Post a message
 POST http://localhost:3000/users/threads/65c356d27f1a75da54bd61cb/messages
 Content-Type: application/json
@@ -67,6 +72,52 @@ Authorization: {{authToken}}
 
 {
   "msg": "Another Rest Message"
+}
+
+###
+
+// Get all user notifications
+GET http://localhost:3000/users/notifications
+Authorization: {{authToken}}
+
+###
+
+// Get all addable friends
+GET http://localhost:3000/users/add-friends
+Authorization: {{authToken}}
+
+###
+
+// Get all posts visible to user
+GET http://localhost:3000/users/posts
+Authorization: {{authToken}}
+
+###
+
+// Post a post from user
+POST http://localhost:3000/users/posts
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "content": "A Rest test post"
+}
+
+###
+
+// Like a post
+GET http://localhost:3000/users/posts/65c500ebab6ad0c628d10e3a/like
+Authorization: {{authToken}}
+
+###
+
+// Comment on a post
+POST http://localhost:3000/users/posts/65c500ebab6ad0c628d10e3a/comment
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "comment": "A Rest test comment"
 }
 
 ###

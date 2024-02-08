@@ -8,7 +8,9 @@ const UserSchema = new Schema({
   lastname: { type: String, required: true, maxLength: 30 },
   profile: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  threads: [{ type: Schema.Types.ObjectId, ref: 'Thread' }]
+  threads: [{ type: Schema.Types.ObjectId, ref: 'Thread' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  friendRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 module.exports = mongoose.model("User", UserSchema)

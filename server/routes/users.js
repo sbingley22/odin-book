@@ -10,6 +10,7 @@ const { body, validationResult } = require('express-validator');
 const User = require('../models/user');
 const Profile = require('../models/profile');
 const Thread = require('../models/thread');
+const Post = require('../models/post');
 
 // Token authentication middleware
 function authenticateToken(req, res, next) {
@@ -303,6 +304,180 @@ router.post('/threads/:threadid/messages', authenticateToken, async function (re
       } else {
         return res.status(400).json({ error: "Cannot find user" });
       }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/notifications', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const friendRequests = await User.find({ _id: { $in: user.friendRequests } }).exec();
+
+        const data = { success: true, user, friendRequests }
+        res.status(200).send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/add-friends', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const friends = user.friends
+        friends.push(user._id)
+        const nonFriends = await User.find({ _id: { $nin: friends } }).exec();
+
+        const data = { success: true, user, nonFriends }
+        res.status(200).send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/posts', authenticateToken, async function(req,res,next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const friends = await User.find({ _id: { $in: user.friends } }).exec();
+
+        let postIds = [...user.posts]
+        friends.forEach(friend => {
+          postIds = postIds.concat(friend.posts)
+        })
+
+        const posts = await Post.find({ _id: { $in: postIds } }).exec();
+        res.send(posts);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+// Route to add a new post
+router.post('/posts', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+
+      if (user == null) {
+        return res.status(400).json({ error: "Invalid user" });
+      }
+
+      const content = req.body.content;
+
+      // Validate content
+      if (!content || content.length === 0) {
+        return res.status(400).json({ error: "Invalid request. Please provide content" });
+      }
+
+      // Create new post
+      const newPost = new Post({
+        user: user._id,
+        content: content,
+        comments: [],
+        likes: []
+      });
+      const savedPost = await newPost.save();
+
+      return res.status(201).json(savedPost);
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Route to like a post
+router.get('/posts/:postid/like', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+
+      if (user == null) {
+        return res.status(400).json({ error: "Invalid user" });
+      }
+
+      const post = await Post.findById(req.params.postid).exec();
+      if (post == null) {
+        return res.status(400).json({ error: "Can't find post" });
+      }
+
+      post.likes.push(user._id)
+      await post.save()
+
+      return res.status(200).json({success: true, post });
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Route to add comment to a post
+router.post('/posts/:postid/comment', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+
+      if (user == null) {
+        return res.status(400).json({ error: "Invalid user" });
+      }
+
+      const post = await Post.findById(req.params.postid).exec();
+      if (post == null) {
+        return res.status(400).json({ error: "Can't find post" });
+      }
+
+      const comment = req.body.comment;
+
+      // Validate comment
+      if (!comment || comment.length === 0) {
+        return res.status(400).json({ error: "Invalid request. Please provide a comment" });
+      }
+
+      const newComment = {
+        user: user._id,
+        comment: comment
+      }
+
+      post.comments.push(newComment)
+      await post.save()
+
+      return res.status(200).json({success: true, post });
     } else {
       return res.status(400).json({ error: "You are not authorized!" });
     }
