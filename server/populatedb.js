@@ -5,7 +5,7 @@ console.log(
 
   node populatedb "mongodb+srv://sbingley22:kA2AOUKQji9ce7YJ@cluster0.b9keqnj.mongodb.net/odin-book?retryWrites=true&w=majority"
 
-  node populatedb "mongodb+srv://sbingley22-main-db-000ce3b014b:UzMX3Mshr2pNVqqjtaerfXcUGC4u3f@prod-us-central1-3.yr9so.mongodb.net/sbingley22-main-db-000ce3b014b" `
+  node populatedb "mongodb+srv://odin-book-main-db-077f3c66296:fa6NHgH5MYfFfqjs1VtqbDhDRBkHMb@prod-us-central1-3.yr9so.mongodb.net/odin-book-main-db-077f3c66296" `
 );
 
 // Get arguments passed on command line
@@ -85,7 +85,7 @@ async function createUsers() {
     createUser(0, "user1", "password1", "Jane", "Doe", "I am an unknown person. Just fill in the blanks!", "I have no interests and all the interests.", "https://img.freepik.com/free-photo/cheerful-good-looking-young-woman-wearing-white-shirt-with-blonde-hair-smiling-pleasantly-while-receiving-some-positive-news-pretty-girl-looking-with-joyful-smile_176420-13579.jpg?w=996&t=st=1707382032~exp=1707382632~hmac=a4857c027409ae6f01934dc25dc487f1e8fe546f0290a65627680855e56a8a94"),
     createUser(1, "user2", "password2", "John", "Doe", "I am an unknown person. Just fill in the blanks!", "I have no interests and all the interests.", "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"),
     createUser(2, "user3", "password3", "Abby", "Able", "Ready, Willing, and Able sir!", "Everything!!!", "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1707350400&semt=ais"),
-    createUser(3, "user4", "password4", "Debby", "Davis", "Full of energy!", "Rock climbing.", "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1707350400&semt=ais"),
+    createUser(3, "user4", "password4", "Debby", "Davis", "Full of energy!", "Rock climbing.", "http://res.freestockphotos.biz/pictures/5/5095-a-beautiful-african-american-teen-girl-posing-by-a-lake-pv.jpg"),
   ])
 }
 
