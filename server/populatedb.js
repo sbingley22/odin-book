@@ -142,6 +142,7 @@ async function addThreads() {
 async function addPost(userindex, content, likes, comments) {
   const postdetail = {
     user: users[userindex]._id,
+    name: `${users[userindex].firstname} ${users[userindex].lastname}`,
     content: content,
     likes: likes,
     comments: comments
@@ -166,14 +167,17 @@ async function addPosts() {
     [
       {
         user: users[1]._id,
+        name: `${users[1].firstname} ${users[1].lastname}`,
         comment: "Welcome to the site!"
       },
       {
         user: users[2]._id,
+        name: `${users[2].firstname} ${users[2].lastname}`,
         comment: "Hello!"
       },
       {
         user: users[0]._id,
+        name: `${users[0].firstname} ${users[0].lastname}`,
         comment: "Thanks guys!"
       }
     ]  
@@ -186,6 +190,7 @@ async function addPosts() {
     [
       {
         user: users[2]._id,
+        name: `${users[2].firstname} ${users[2].lastname}`,
         comment: "Totally!"
       },
     ]  

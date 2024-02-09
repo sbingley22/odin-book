@@ -413,6 +413,12 @@ router.post('/notifications/accept-friend', authenticateToken, async function (r
           user.friends.push(requestId);
           // Save the updated user object
           await user.save();
+
+          // Add friend to the other user
+          const user2 = await User.findById(requestId).exec();
+          user2.friends.push(user._id)
+          await user2.save()
+
           const data = { success: true }
           return res.status(200).send(data);
         } else {
@@ -483,6 +489,38 @@ router.get('/add-friends', authenticateToken, async function (req, res, next) {
   }
 });
 
+router.post('/add-friends', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const friendId = req.body.friendId
+
+        const friend = await User.findById(friendId).exec();
+
+        // Check if friendId already exists in friendRequests
+        if (!friend.friendRequests.includes(user._id)) {
+          // If friendId doesn't exist, add it to friendRequests
+          friend.friendRequests.push((user._id))
+          await friend.save(); // Save the updated user document
+
+          const data = { success: true }
+          return res.status(200).send(data);
+        } else {
+          return res.status(400).json({ error: "Friend request already sent" });
+        }
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get('/posts', authenticateToken, async function(req,res,next) {
   try {
     if (req.user != null) {
@@ -520,6 +558,7 @@ router.post('/posts', authenticateToken, async function (req, res, next) {
       }
 
       const content = req.body.content;
+      //console.log(content)
 
       // Validate content
       if (!content || content.length === 0) {
@@ -529,11 +568,15 @@ router.post('/posts', authenticateToken, async function (req, res, next) {
       // Create new post
       const newPost = new Post({
         user: user._id,
+        name: `${user.firstname} ${user.lastname}`,
         content: content,
         comments: [],
         likes: []
       });
       const savedPost = await newPost.save();
+
+      user.posts.push(savedPost._id)
+      await user.save()
 
       return res.status(201).json(savedPost);
     } else {
@@ -544,6 +587,25 @@ router.post('/posts', authenticateToken, async function (req, res, next) {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.get('/posts/:postid', authenticateToken, async function(req,res,next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const post = await Post.findById(req.params.postid).exec();
+        res.send(post);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+})
 
 // Route to like a post
 router.get('/posts/:postid/like', authenticateToken, async function (req, res, next) {
@@ -597,6 +659,7 @@ router.post('/posts/:postid/comment', authenticateToken, async function (req, re
 
       const newComment = {
         user: user._id,
+        name: `${user.firstname} ${user.lastname}`,
         comment: comment
       }
 

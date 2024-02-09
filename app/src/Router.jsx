@@ -9,6 +9,10 @@ import SignUp from "./components/SignUp"
 import NewThread from "./components/NewThread"
 import Notifications from "./components/Notifications"
 import UpdateProfile from "./components/UpdateProfile"
+import FindFriends from "./components/FindFriends"
+import Posts from "./components/Posts"
+import Post from "./components/Post"
+import NewPost from "./components/NewPost"
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -22,8 +26,24 @@ const Router = () => {
       element: <SignUp />,
     },
     {
+      path: "users/posts",
+      element: <Posts />,
+    },
+    {
+      path: "users/new-post",
+      element: <NewPost />,
+    },
+    {
+      path: "users/posts/:postid",
+      element: <PostWrapper />,
+    },
+    {
       path: "users/friends",
       element: <Friends />,
+    },
+    {
+      path: "users/find-friends",
+      element: <FindFriends />,
     },
     {
       path: "users/new-thread",
@@ -62,6 +82,11 @@ const ProfileWrapper = () => {
 const ThreadWrapper = () => {
   const { threadid } = useParams();
   return <Thread threadId={threadid} />;
+};
+
+const PostWrapper = () => {
+  const { postid } = useParams();
+  return <Post postId={postid} />;
 };
 
 export default Router

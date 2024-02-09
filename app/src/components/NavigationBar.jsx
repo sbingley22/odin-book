@@ -12,14 +12,17 @@ const NavigationBar = () => {
 
   return (
     <Navbar bg="light" expand="lg" style={{marginBottom: "40px"}} >
-      <Navbar.Brand as={Link} to="/">Odin Socials</Navbar.Brand>
+      <Navbar.Brand as={Link} to="/" className='m-2'>Odin Socials</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link as={Link} to="/">Profile</Nav.Link>
-          <Nav.Link as={Link} to="/users/new-thread">New Thread</Nav.Link>
+          <Nav.Link as={Link} to="/users/posts">Posts</Nav.Link>
+          <Nav.Link as={Link} to="/users/new-post">New Post</Nav.Link>
           <Nav.Link as={Link} to="/users/threads">Threads</Nav.Link>
+          <Nav.Link as={Link} to="/users/new-thread">New Thread</Nav.Link>
           <Nav.Link as={Link} to="/users/friends">Friends</Nav.Link>
+          <Nav.Link as={Link} to="/users/find-friends">Find Friends</Nav.Link>
           <Nav.Link as={Link} to="/users/notifications">Notifications</Nav.Link>
         </Nav>
         <Nav className="justify-content-end" style={{ marginLeft: "auto"}}>

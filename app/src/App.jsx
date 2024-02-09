@@ -35,6 +35,7 @@ function App() {
       if (jsonData && jsonData.profileid) {
         //console.log("navigating to profile page")
         navigate(`/users/profiles/${jsonData.profileid}`)
+        //navigate(`/users/posts`)
       }
       
     } catch (error) {
