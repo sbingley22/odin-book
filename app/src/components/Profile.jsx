@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import NavigationBar from "./NavigationBar"
-import { Container, Row, Col, Image } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'
+import { Container, Row, Col, Image, Button } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -37,7 +37,7 @@ const Profile = ({ profileId }) => {
           }
         })
         const jsonData = await response.json()
-        console.log(jsonData)
+        //console.log(jsonData)
         
         if (jsonData) {
           setUser(jsonData)
@@ -76,6 +76,9 @@ const Profile = ({ profileId }) => {
             <p>{user.about}</p>
           </Col>
         </Row>
+        <Link to="/users/user/update-profile">
+          Click here to update your profile
+        </Link>
       </Container>
     </div>
   )

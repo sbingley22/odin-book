@@ -30,10 +30,10 @@ function App() {
         }
       })
       const jsonData = await response.json()
-      console.log(jsonData)
+      //console.log(jsonData)
       
       if (jsonData && jsonData.profileid) {
-        console.log("navigating to profile page")
+        //console.log("navigating to profile page")
         navigate(`/users/profiles/${jsonData.profileid}`)
       }
       

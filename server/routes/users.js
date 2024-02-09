@@ -313,6 +313,71 @@ router.post('/threads/:threadid/messages', authenticateToken, async function (re
   }
 });
 
+router.get('/user/profile', authenticateToken, async function(req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const profile = await Profile.findById(user.profile).exec()
+        const data = { success: true, user, profile }
+        res.status(200).send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post('/user/profile', authenticateToken, async function(req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const profile = await Profile.findById(user.profile).exec()
+        profile.image = req.body.image
+        profile.interests = req.body.interests
+        profile.about = req.body.about
+        await profile.save()
+
+        const data = { success: true, user }
+        //console.log(data)
+        return res.send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/user', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        const data = { success: true, user }
+        res.status(200).send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get('/notifications', authenticateToken, async function (req, res, next) {
   try {
     if (req.user != null) {
@@ -322,6 +387,67 @@ router.get('/notifications', authenticateToken, async function (req, res, next) 
 
         const data = { success: true, user, friendRequests }
         res.status(200).send(data);
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post('/notifications/accept-friend', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        // Check if the ID posted is in the friendRequests array
+        const requestId = req.body.requestId; // Assuming you're passing the ID as 'requestId' in the request body
+        const index = user.friendRequests.indexOf(requestId);
+        if (index !== -1) {
+          // If ID is found in friendRequests, remove it and add to friends
+          user.friendRequests.splice(index, 1);
+          user.friends.push(requestId);
+          // Save the updated user object
+          await user.save();
+          const data = { success: true }
+          return res.status(200).send(data);
+        } else {
+          return res.status(400).json({ error: "Request ID not found in friend requests" });
+        }
+      } else {
+        return res.status(400).json({ error: "Cannot find user" });
+      }
+    } else {
+      return res.status(400).json({ error: "You are not authorized!" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post('/notifications/reject-friend', authenticateToken, async function (req, res, next) {
+  try {
+    if (req.user != null) {
+      const user = await User.findOne({ username: req.user.username }).exec();
+      if (user != null) {
+        // Check if the ID posted is in the friendRequests array
+        const requestId = req.body.requestId; // Assuming you're passing the ID as 'requestId' in the request body
+        const index = user.friendRequests.indexOf(requestId);
+        if (index !== -1) {
+          // If ID is found in friendRequests, remove it
+          user.friendRequests.splice(index, 1);
+          // Save the updated user object
+          await user.save();
+          const data = { success: true }
+          return res.status(200).send(data);
+        } else {
+          return res.status(400).json({ error: "Request ID not found in friend requests" });
+        }
       } else {
         return res.status(400).json({ error: "Cannot find user" });
       }

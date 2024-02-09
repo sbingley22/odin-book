@@ -20,6 +20,7 @@ const NavigationBar = () => {
           <Nav.Link as={Link} to="/users/new-thread">New Thread</Nav.Link>
           <Nav.Link as={Link} to="/users/threads">Threads</Nav.Link>
           <Nav.Link as={Link} to="/users/friends">Friends</Nav.Link>
+          <Nav.Link as={Link} to="/users/notifications">Notifications</Nav.Link>
         </Nav>
         <Nav className="justify-content-end" style={{ marginLeft: "auto"}}>
           <Button variant="outline-primary" onClick={logout}>Logout</Button>

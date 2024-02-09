@@ -7,6 +7,8 @@ import Thread from "./components/Thread"
 import Friends from "./components/Friends"
 import SignUp from "./components/SignUp"
 import NewThread from "./components/NewThread"
+import Notifications from "./components/Notifications"
+import UpdateProfile from "./components/UpdateProfile"
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -32,12 +34,20 @@ const Router = () => {
       element: <ProfileWrapper />,
     },
     {
+      path: "users/user/update-profile",
+      element: <UpdateProfile />,
+    },
+    {
       path: "users/threads",
       element: <Threads />,
     },
     {
       path: "users/threads/:threadid",
       element: <ThreadWrapper />,
+    },
+    {
+      path: "users/notifications",
+      element: <Notifications />,
     },
   ])
 
